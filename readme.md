@@ -1,12 +1,18 @@
-Firstly install OpenPrompt https://github.com/thunlp/OpenPrompt
-Then copy prompts/knowledgeable_verbalizer.py to Openprompt/openprompt/prompts/knowledgeable_verbalizer.py
+This is the repository for the "Clickbait Detection via Prompt-tuning with Titles Only".
+
+First, by `pip install -r requirement.txt` to install all the dependencies.
+
+Then you need to install OpenPrompt.
+And copy prompts/knowledgeable_verbalizer.py to Openprompt/openprompt/prompts/knowledgeable_verbalizer.py.
+
+In addition,You need to use e methods to filter tag words,In this process, you need to download the corresponding vocabulary.
+These words need to be put scripts/TextClassification，and modify the corresponding position.
+
+Also, you can put your own dataset in datasets/TextClassification.
 
 example shell scripts:
 
-python fewshot.py --result_file ./output_fewshot.txt --dataset clickbait --template_id 0 --seed 123 --shot 10 --verbalizer manual
+python main.py  --verbalizer cpt
 
-python fewshot1.py --result_file ./output_fewshot1.txt --dataset snippets --template_id 0 --seed 144 --verbalizer cpt --calibration
 
-Note that the file paths should be changed according to the running environment. 
 
-The datasets are downloadable via OpenPrompt.

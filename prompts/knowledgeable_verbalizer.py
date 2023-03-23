@@ -43,26 +43,26 @@ class KnowledgeableVerbalizer(ManualVerbalizer):
         self.candidate_frac = candidate_frac
         self.pred_temp = pred_temp
 
-    # def on_label_words_set(self):
-    #     self.label_words = self.delete_common_words(self.label_words)
-    #     self.label_words = self.add_prefix(self.label_words, self.prefix)
-    #     self.generate_parameters()
+    def on_label_words_set(self):
+        self.label_words = self.delete_common_words(self.label_words)
+        self.label_words = self.add_prefix(self.label_words, self.prefix)
+        self.generate_parameters()
 
-    # def delete_common_words(self, d):
-    #     word_count = {}
-    #     for d_perclass in d:
-    #         for w in d_perclass:
-    #             if w not in word_count:
-    #                 word_count[w]=1
-    #             else:
-    #                 word_count[w]+=1
-    #     for w in word_count:
-    #         if word_count[w]>=2:
-    #             for d_perclass in d:
-    #                 if w in d_perclass[1:]:
-    #                     findidx = d_perclass[1:].index(w)
-    #                     d_perclass.pop(findidx+1)
-    #     return d
+    def delete_common_words(self, d):
+        word_count = {}
+        for d_perclass in d:
+            for w in d_perclass:
+                if w not in word_count:
+                    word_count[w]=1
+                else:
+                    word_count[w]+=1
+        for w in word_count:
+            if word_count[w]>=2:
+                for d_perclass in d:
+                    if w in d_perclass[1:]:
+                        findidx = d_perclass[1:].index(w)
+                        d_perclass.pop(findidx+1)
+        return d
 
     @staticmethod
     def add_prefix(label_words, prefix):
@@ -158,8 +158,6 @@ class KnowledgeableVerbalizer(ManualVerbalizer):
         label_words_logits = logits[:, self.label_words_ids]
         label_words_logits = self.handle_multi_token(label_words_logits, self.words_ids_mask)
         label_words_logits -= 10000*(1-self.label_words_mask)
-        # print(label_words_logits.item())
-        # print(label_words_weights.item())
         return label_words_logits
 
     def aggregate(self, label_words_logits: torch.Tensor) -> torch.Tensor:
@@ -176,10 +174,6 @@ class KnowledgeableVerbalizer(ManualVerbalizer):
         else:
             label_words_weights = F.softmax(self.label_words_weights-10000*(1-self.label_words_mask), dim=-1)
         label_words_logits = (label_words_logits * self.label_words_mask * label_words_weights).sum(-1)
-        # x=label_words_weights.item()
-        # print(x)
-        # print(label_words_logits.float())
-        print(label_words_weights)
         return label_words_logits
 
     
